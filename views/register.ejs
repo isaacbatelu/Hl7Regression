@@ -1,0 +1,49 @@
+<%- include('includes/head.ejs') %>
+</head>
+<body>
+    <%- include('includes/navigation.ejs') %>
+    <div class="container">
+      <div class="mt-4">
+        <% if(message != '') { %>
+          <div class="alert alert-warning mt-4" role="alert">
+              <%= message %>
+          </div>
+        <% } %>
+        <h4>
+            User
+            <p> <small class="text-muted">Create a new User</small></p>
+        </h4>
+      </div>
+      <hr class="mb-5">
+        <form action="/integration/user" method="POST">
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                  <input type="text" autocomplete="off" class="form-control" placeholder="First name" name="firstName" required>
+                </div>
+                <div class="form-group col-md-6">
+                  <input type="text" autocomplete="off" class="form-control" placeholder="Last name" name="lastName" required>
+                </div>
+            </div>
+
+            <div class="form-row mt-4">
+                <div class="form-group col-md-6">
+                  <input type="email" autocomplete="off" class="form-control" id="inputEmail4" placeholder="E-Mail" name="email" required>
+                </div>
+                <div class="form-group col-md-6">
+                  <input type="password" autocomplete="off" class="form-control" id="inputPassword4" placeholder="Password" name="password" required>
+                  <small id="passwordHelpBlock" class="form-text text-muted">
+                    Your password must be 8-20 characters long, contain lower case and upper case letters, numbers, and must not contain spaces.
+                  </small>
+                </div>
+            </div>
+
+            <div class="custom-control custom-switch mt-3">
+                <input type="checkbox" class="custom-control-input" id="customSwitch1" name="userAccess">
+                <label class="custom-control-label" for="customSwitch1">Administrator</label>
+              </div>
+          <button type="submit" id="submitUser" class="btn btn-secondary btn-lg btn-block my-3">Submit</button>
+        </form>
+    </div>
+    
+<%- include('includes/end.ejs') %>

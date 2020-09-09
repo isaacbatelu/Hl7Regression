@@ -1,0 +1,118 @@
+<%- include('includes/head.ejs') %>
+</head>
+<body>
+    <%- include('includes/navigation.ejs') %>
+    <div class="jumbotron jumbotron-fluid py-3">
+        <div class="container mt-4">
+            <div>
+                <h4>
+                    <%=testCase.testCaseName%>
+                    <p> <small class="text-muted">
+                        <%=testCase.inputComm %> TO <%=testCase.outputComm %>                
+                        </small>
+                    </p>
+                </h4> 
+                <div class="row mb-3">
+                    <div class="col-8">
+                        <h5>
+                            <small class="list-group list-group-horizontal text-muted float-left">
+                                <li class="list-group-item">Date Created: <%=testCase.testCaseDate %></li>
+                                <li class="list-group-item">Start Date: <%=testCase.fromDate %></li>
+                                <li class="list-group-item">End Date: <%=testCase.enteredStartDate %></li>
+                        </small>
+                        </h5>
+                        
+                    </div>
+                    <div class="col-4">
+                        <form id="delete-form" action="/integration/testCases/<%= testCase.testCaseID %>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger float-right col-3 btn-block" data-toggle="tooltip" data-placement="top" title="Delete Test Case"><i class="fas fa-trash-alt"></i></button>
+                        </form>
+                        <% if(testCase.status == 'Created') { %>
+                            <form id="run-form" action="/integration/testCases/<%= testCase.testCaseID %>" method="POST">
+                                <button class="btn btn-success float-right mr-2 col-3 btn-block" data-toggle="tooltip" data-placement="top" title="Run Test Case" id="runTest"><i class="fas fa-play"></i></button>
+                            </form>
+                        <% } %> 
+                        
+                            <a class="btn btn-primary float-right mr-2 col-3 btn-block" data-toggle="tooltip" data-placement="top" title="Download Input File" 
+                            href="/integration/testcases/<%= testCase.testCaseID %>/download/<%= testCase.testCaseName %>_ProdInput<%= testCase.inputCommID %>">
+                            <i class="fas fa-download"> </i></a>
+                    </div>
+                
+                  <!--  <% if(testCase.status == 'Created') { %>
+                        <div class="col-12 mt-3">
+                            <p class="mb-0">Once the Rhapsody process is complete, please click Run.</p>
+                            <a href="/integration/testcases/<%= testCase.testCaseID %>/input/<%= testCase.testCaseName %>_ProdInput<%= testCase.inputCommID %>" class="btn btn-primary btn-block">Download Input File</a>
+                        </div>
+                    <% } %>  -->
+                </div>  
+            </div> 
+        </div>
+    </div>
+    <div class="container"> 
+        <div mt-4>
+            <h4>RESULT SUMMARY</h4>
+            <% if(testCase.status == 'Created') { %>
+                <div class="row">
+                    <div class="col-10">
+                                               <h5 class="lead">
+                            Test case results are not available yet. Once the Rhapsody process is complete, please click Run. 
+                        </h5>
+                    </div>
+                </div>
+            <% } else { %>
+               
+                <div class="card mt-3">
+                    <h5 class="card-header">Count Match</h5>
+                    <div class="card-body">
+                        <h5 class="card-title"> <span class="h1 text-danger font-weight-bold font-italic h1"><%=testResult[0].InStgNotInPrdCnt+testResult[0].recMatchCnt+testResult[0].recMisMatchCnt%></span>   records found in Staging</h5>
+                        <h5 class="card-title"> <span class="h1 text-danger font-weight-bold font-italic h1"><%=testResult[0].InProdNotInStgCnt+testResult[0].recMatchCnt+testResult[0].recMisMatchCnt%></span>  records found in Production</h5>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <h5 class="card-header">Filtered Records</h5>
+                    <div class="card-body">
+                        <h5 class="card-title"> <span class="h1 text-danger font-weight-bold font-italic h1"><%=testResult[0].InProdNotInStgCnt%></span>  records found in Production, but not in Staging</h5>
+                        <% if(testResult[0].InProdNotInStg) { %>
+                            <a href="/integration/testcases/<%= testCase.testCaseID %>/download/<%= testCase.testCaseName %>_InProdNotInStg" class="btn btn-primary">Download File</a>
+                        <% } %> 
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <h5 class="card-header">Additional Records</h5>
+                    <div class="card-body">
+                        <h5 class="card-title"><span class="h1 text-danger font-weight-bold font-italic h1"><%=testResult[0].InStgNotInPrdCnt%></span>   records found in Staging, but not in Production</h5>
+                        <% if(testResult[0].InStgNotInPrd) { %>
+                            <a href="/integration/testcases/<%= testCase.testCaseID %>/download/<%= testCase.testCaseName %>_InStgNotInPrd" class="btn btn-primary">Download File</a>
+                        <% } %>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <h5 class="card-header">Records Mismatch</h5>
+                    <div class="card-body">
+                        <h5 class="card-title"><span class="h1 text-danger font-weight-bold font-italic h1"><%=testResult[0].recMisMatchCnt%></span> records that don't match between Staging & Production</h5>
+                        <% if(testResult[0].recMisMatch) { %>
+                            <a href="/integration/testcases/<%= testCase.testCaseID %>/download/<%= testCase.testCaseName %>_recMismatchStage" class="btn btn-primary float-left">Download Stage File</a>
+                            <a href="/integration/testcases/<%= testCase.testCaseID %>/download/<%= testCase.testCaseName %>_recMismatchPrd" class="btn btn-primary float-right">Download Prd File</a>
+                        <% } %>
+                    </div>
+                </div>
+
+                <div class="card my-3">
+                    <h5 class="card-header">Records Match</h5>
+                    <div class="card-body">
+                        <h5 class="card-title"><span class="h1 text-danger font-weight-bold font-italic h1"><%=testResult[0].recMatchCnt%></span> records that match between Staging & Production</h5>
+                        <% if(testResult[0].recMatch) { %>
+                            <a href="/integration/testcases/<%= testCase.testCaseID %>/download/<%= testCase.testCaseName %>_recMatchStage" class="btn btn-primary float-left">Download Stage File</a>
+                            <a href="/integration/testcases/<%= testCase.testCaseID %>/download/<%= testCase.testCaseName %>_recMatchPrd" class="btn btn-primary float-right">Download Prd File</a>
+                        <% } %>
+                    </div>
+                </div>
+                
+            <% } %> 
+            
+        </div>
+    </div>
+<%- include('includes/end.ejs') %>

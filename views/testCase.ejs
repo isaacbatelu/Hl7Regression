@@ -1,0 +1,68 @@
+<%- include('includes/head.ejs') %>
+</head>
+<body>
+    <%- include('includes/navigation.ejs') %>
+    <div class="container">
+      <div class="mt-4">
+        <h4>
+            New Test
+            <p> <small class="text-muted">Enter New Test Details Below</small></p>
+        </h4>
+      </div>
+      <hr class="mb-5">
+        <form action="/integration/testCases" method="POST">
+          <div class="form-group">
+            <div class="mt-3">
+              <label for="testCaseName">Enter Test Case Name</label>
+              <input type="text" autocomplete="off" class="form-control" id="testCaseName" name="testCaseName" required>
+            </div>
+            <div class="mt-3">
+              <label for="inputComm">Select Input Communication Point</label>
+              <select class="form-control" id="inputComm" name="inputComm">
+                  <%for(let result of res) {%>
+                    <%if(result.INBOUND == 1) {%>
+                      <option><%=result.INTERFACEID%> - <%=result.INTERFACENAME%> </option>
+                    <%}%>
+                  <%}%>
+              </select>
+            </div>
+            <div class="mt-3">
+              <label for="outputComm">Select Output Communication Point</label>
+              <select class="form-control" id="outputComm" name="outputComm">
+                  <%for(let result of res) {%>
+                    <%if(result.INBOUND == 0) {%>
+                      <option><%=result.INTERFACEID%> - <%=result.INTERFACENAME%> </option>
+                    <%}%>
+                  <%}%>
+              </select>
+            </div>
+            <div class="mt-3">
+              <label for="fromDate">Select Date</label>
+              <div class="input-group date" id="fromDate" data-target-input="nearest">
+                
+                <input type="text" autocomplete="off" class="form-control datetimepicker-input" name="fromDate" data-target="#fromDate" required>
+                <div class="input-group-append" data-target="#fromDate" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+              </div>
+            </div>
+            <div class="custom-control custom-switch mt-3">
+              <input type="checkbox" class="custom-control-input" id="customSwitch1" name="switch">
+              <label class="custom-control-label" for="customSwitch1">Select Multiple Days</label>
+            </div>
+            <div id="toggleEndDate" class="mt-3 d-none">
+              <label for="toDate">Select End Date</label>
+              <div class="input-group date" id="toDate" data-target-input="nearest">
+               
+                <input type="text" autocomplete="off" class="form-control datetimepicker-input" name="toDate" data-target="#toDate" >
+                <div class="input-group-append" data-target="#toDate" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+              </div>
+            </div>
+
+          <button type="submit" id="submitTest" class="btn btn-secondary btn-lg btn-block my-3">Submit</button>
+        </form>
+    </div>
+    
+<%- include('includes/end.ejs') %>

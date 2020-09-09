@@ -1,0 +1,42 @@
+<%- include('includes/head.ejs') %>
+</head>
+<body>
+    <%- include('includes/navigation.ejs') %>
+    <div class="container mt-4">
+        <% if(message != '') { %>
+          <div class="alert alert-warning mt-4" role="alert">
+              <%= message %>
+          </div>
+        <% } %>
+        <h4>
+            Regression Test Cases
+            <p> <small class="text-muted">List of all Test Cases</small></p>
+          </h4>
+          <table class="table table-hover table mt-3">
+            <thead>   
+              <tr>
+                <th scope="col" class="pt-5">Name</th>
+                <th scope="col">Status</th>
+                <th scope="col">Date Created</th>
+                <th scope="col">Input</th>
+                <th scope="col">Output</th>
+              </tr>
+            </thead>
+            <% if(testCases.length > 0) { %>
+                <% for(let testCase of testCases) { %>
+                    <tr class="table-row" data-href="/integration/testcases/<%= testCase.testCaseID %>">
+                        <th scope="row"><%= testCase.testCaseName %></th>
+                        <td><%= testCase.status %></td>
+                        <td><%= testCase.testCaseDate %></td>
+                        <td><%= testCase.inputComm %></td>
+                        <td><%= testCase.outputComm %></td>
+                    </tr>
+                <% } %>
+            <% } else { %>
+                <th scope="row"><h5 class="text-muted">No Test Cases Found</h5></th>
+            <% } %> 
+          </table>
+
+    </div>
+    
+    <%- include('includes/end.ejs') %>
